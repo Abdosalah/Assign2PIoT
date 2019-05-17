@@ -43,6 +43,12 @@ class DatabaseUtils:
                 "select * from Book Where Title = %s", (bookTitle,))
             return cursor.fetchall()
 
+    def getBookById(self, bookId):
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                "select * from Book Where BookID = %s", (bookId,))
+            return cursor.fetchall()
+
     def getBookByAuthor(self, bookAuthor):
         with self.connection.cursor() as cursor:
             cursor.execute(
