@@ -3,18 +3,20 @@ from datetime import datetime
 
 class Menu:
 
+    userId = NotImplemented
     db = NotImplemented
     isRunnig = True
     display_menu = "1.Search\n2.Borrow\n3.Return\n4.Logout\n"
     author_menu = "Please enter the name of the Author\n"
     title_menu = "Please enter the Title of the book\n"
     search_type = "1.Search by Author\n2.Search by Title\n"
-    selectBookPromt = "Please Select a book\n"
+    selectBookPromt = "Please Select a book by ID\n"
     selectActionPromt = "1.Borrow Book\n2.Return Book\n"
     searchedBooks = []
     returnDatePromt = "enter return date in the format DD-MM-YYYY\n"
     
-    def __init__(self):
+    def __init__(self, userId):
+        self.userId = userId
         self.db = DatabaseUtils()
 
         while(self.isRunnig):
@@ -22,11 +24,11 @@ class Menu:
             choice = input(self.display_menu)
 
             if (choice == '1'):
-                self.searchForBook()
+                self.searchForBook('search')
             elif(choice == '2'):
-                print("two")
+                self.searchForBook('borrow')
             elif (choice == '3'):
-                print("three")
+                self.searchForBook('return')
             elif (choice == '4'):
                 self.isRunnig = False
             else:
@@ -48,6 +50,9 @@ class Menu:
         selectedBook = input(self.selectBookPromt)
         if (int(selectedBook) in self.searchedBooks ):
             for value in self.db.getBookById(int(selectedBook)):
+                bookId, title, author, pDate = value
+                stringDate = pDate.strftime('%m/%d/%Y')
+                print(str(bookId)+'\t'+title+'\t'+author+'\t'+stringDate+'\n')
                 return value
         else:
             return False
@@ -69,14 +74,14 @@ class Menu:
         selectedDate = datetime.strptime(myDate, '%d-%m-%Y')
         value = selectedDate.date() - datetime.now().date()
         if (value.days > 7 ):
-            self.db.borrowBook(2, book[0], selectedDate.date())
+            self.db.borrowBook(self.userId, book[0], selectedDate.date())
             print("Valid return Date")
         else:
             print("Invalid return Date")
 
 
     #Promts the user for a Search type, either by Author's name or Book Title    
-    def searchForBook(self):
+    def searchForBook(self, chosenOption):
         searchType = input(self.search_type)
         #Search by Author
         if (searchType == '1'):
@@ -97,6 +102,12 @@ class Menu:
         else:
             print("Invalid Choice")
 
+    #TODO
+    # def handleLogic(self, book, chosenOption):
+    #     if (chosenOption == 'search'):
+    #         self.borrowOrReturn(book)
+    #     print()
+
     def borrowOrReturn(self, book):
         desiredAction = input(self.selectActionPromt)
         #Borrow book
@@ -104,20 +115,22 @@ class Menu:
             #cheking if the book is not borrowed
             if (not self.db.isBookBorrowed(book[0])):
                 #allow borrowing
-                print('book not borrowed')
+                self.borrowBook(book)
+                print("The Book was successfully borrowed!\n")
             else:
-                print("Invalid Book choice")
+                print("The chosen book is already Borrowed\n")
         #Return book
         elif (desiredAction == '2'):
             #Checking if the book is borrowed
             if (self.db.isBookBorrowed(book[0])):
                 #allow return
-                print('book is borrowed')
+                self.db.returnBook(book[0])
+                print("The Book was successfully returned!\n")
             else:
-                print("Invalid Book choice")
+                print("The chosen book is not Borrowed\n")
         else:
             print("Invalid Choice")
 
     
 
-start = Menu()
+start = Menu(3)
