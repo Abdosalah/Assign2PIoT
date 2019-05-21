@@ -1,3 +1,4 @@
 __pycache__
 test.py
-google_calendar/*.json
+google_calendar/credentials.json
+google_calendar/token.json
