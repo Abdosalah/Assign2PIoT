@@ -5,7 +5,7 @@ sys.path.append("..")
 import socket_utils
 
 # Empty string means to listen on all IP's on the machine, also works with IPv6.
-HOST = ""
+HOST = '131.170.239.9'
 # Note "0.0.0.0" also works but only with IPv4.
 PORT = 63000  # Port to listen on (non-privileged ports are > 1023).
 ADDRESS = (HOST, PORT)
