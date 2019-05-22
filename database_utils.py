@@ -49,6 +49,12 @@ class DatabaseUtils:
                 "select * from Book Where BookID = %s", (bookId,))
             return cursor.fetchall()
 
+    def getBorrowedBooks(self, userId):
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                "select BookID from BookBorrowed Where LmsUserID = %s and Status = 'borrowed'", (userId,))
+            return cursor.fetchall()
+
     def getBookByAuthor(self, bookAuthor):
         with self.connection.cursor() as cursor:
             cursor.execute(
@@ -64,10 +70,10 @@ class DatabaseUtils:
             self.connection.commit()
 
     #Returns True if the book is Borrowed and False otherwise
-    def isBookBorrowed(self, bookId):
+    def isBookBorrowed(self, userId, bookId):
         with self.connection.cursor() as cursor:
             cursor.execute(
-                "select Status from BookBorrowed Where BookID= %s", (bookId,)
+                "select Status from BookBorrowed Where BookID= %s and LmsUserID = %s ", (bookId, userId, )
             )
             if ( cursor.rowcount > 0 ):
                 for status in cursor.fetchall():
@@ -76,10 +82,11 @@ class DatabaseUtils:
             return False
 
     #Changes the status of the Book to returned
-    def returnBook(self, bookId):
+    def returnBook(self, userId, bookId):
         with self.connection.cursor() as cursor:
             cursor.execute(
-                "update BookBorrowed set Status = 'returned' Where BookID= %s", (bookId,)
+                "update BookBorrowed set Status = 'returned' Where BookID= %s and LmsUserID = %s and Status = 'borrowed'", (
+                    bookId, userId, )
             )
             self.connection.commit()
 
@@ -94,7 +101,11 @@ class DatabaseUtils:
 
 # myDb = DatabaseUtils()
 
-# myDb.returnBook(3)
+# print(myDb.getBorrowedBooks(2))
+
+# print(myDb.isBookBorrowed(3,5))
+
+# myDb.returnBook(2, 3)
 
 # print(myDb.isBookBorrowed(3))
 
