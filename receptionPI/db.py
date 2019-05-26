@@ -1,6 +1,6 @@
 import sqlite3 as lite
 
-con = lite.connect('library.db')
+con = lite.connect('UsersRP.db')
 cur = con.cursor()
 
 cur.execute("DROP TABLE IF EXISTS library_data")

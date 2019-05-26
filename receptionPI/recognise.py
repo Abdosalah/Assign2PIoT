@@ -97,7 +97,6 @@ class facialRecognition:
             for name in names:
                 # print to console, identified person
                 if (name is not "Unknown"):
-                    print("Person found: {}".format(name))
                     return name
                 # Set a flag to sleep the cam for fixed time
                 time.sleep(3.0)
@@ -105,8 +104,3 @@ class facialRecognition:
         # do a bit of cleanup
         vs.stop()
 
-
-myFR = facialRecognition()
-
-
-print(myFR.startRecognizing())
