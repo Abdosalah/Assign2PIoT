@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
-# Documentation: https://docs.python.org/3/library/struct.html
-import socket, json, struct
+# Acknowledgement
+# This code is adapted from: Matthew
+import socket
+import json
+import struct
+
 
 def sendJson(socket, object):
     jsonString = json.dumps(object)
@@ -8,6 +12,7 @@ def sendJson(socket, object):
     jsonLength = struct.pack("!i", len(data))
     socket.sendall(jsonLength)
     socket.sendall(data)
+
 
 def recvJson(socket):
     buffer = socket.recv(4)

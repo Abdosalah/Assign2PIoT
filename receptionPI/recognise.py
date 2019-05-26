@@ -1,8 +1,7 @@
-## Acknowledgement
-## This code is adapted from:
-## https://www.pyimagesearch.com/2018/06/18/face-recognition-with-opencv-python-and-deep-learning/
+# Acknowledgement
+# This code is adapted from:
+# https://www.pyimagesearch.com/2018/06/18/face-recognition-with-opencv-python-and-deep-learning/
 
-# import the necessary packages
 from imutils.video import VideoStream
 import face_recognition
 import argparse
@@ -98,4 +97,3 @@ class facialRecognition:
 
         # do a bit of cleanup
         vs.stop()
-

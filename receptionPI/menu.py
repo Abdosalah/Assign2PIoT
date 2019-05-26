@@ -1,6 +1,10 @@
-import socket, json, sys
-from dbLogic import LocalUser
+# Acknowledgement
+# part of this code is adapted from: Matthew
 
+import socket
+import json
+import sys
+from dbLogic import LocalUser
 from datetime import datetime
 import socket_utils
 
@@ -26,21 +30,22 @@ class RPMenu:
             choice = input(self.display_menu)
 
             if (choice == '1'):
-                self.connectToMp('Abdo', 123)
                 username = input(self.username_promt)
                 password = input(self.password_promt)
 
                 if (self.db.loginUsingCredentials(username, password)):
-                    #We would send a msg using socket to MP
+                    # We would send a msg using socket to MP
                     print("--login success")
-                    self.connectToMp(username, 123)
+                    self.connectToMp(username)
                 else:
                     print('--Invalid Username and/or password')
 
             elif(choice == '2'):
-                if (self.db.loginUsingFR()):
-                    #We would send a msg using socket to MP
+                username = self.db.loginUsingFR()
+                if (username):
+                    # We would send a msg using socket to MP
                     print("--login success")
+                    self.connectToMp(username)
                 else:
                     print('--User not found or Face not detected')
 
@@ -52,19 +57,17 @@ class RPMenu:
                 email = input(self.email_promt)
 
                 if (self.db.registerUser(username, password, firstName, lastName, email)):
-                    #We would send a msg using socket to MP
+                    # We would send a msg using socket to MP
                     print("--Register success")
+                    self.connectToMp(username)
                 else:
                     print('--Please try again')
-
-
             elif (choice == '4'):
                 self.isRunnig = False
             else:
                 print("--Invalid Choice")
 
-
-    def connectToMp(self, username, id):
+    def connectToMp(self, username):
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             print("Connecting to {}...".format(self.ADDRESS))
@@ -72,11 +75,11 @@ class RPMenu:
             print("Connected.")
 
             print("Logging in as {}".format(username))
-            #Sending information to the master pi
+            # Sending information to the master pi
             socket_utils.sendJson(s, username)
 
             print("Waiting for Master Pi...")
-            #Loop to wait for the master pi to send logout = True
+            # Loop to wait for the master pi to send logout = True
             while(True):
                 object = socket_utils.recvJson(s)
                 if("logout" in object):

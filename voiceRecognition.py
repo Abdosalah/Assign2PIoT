@@ -1,10 +1,13 @@
+# Acknowledgement
+# This code is adapted from: Matthew
 import speech_recognition as sr
 import subprocess
 
-class speechTranslation:
 
+class speechTranslation:
     __MIC_NAME = "Microsoft® LifeCam HD-3000: USB Audio (hw:1,0)"
     __device_id = None
+
     def __init__(self):
 
         # Set the device ID of the mic that we specifically want to use to avoid ambiguity
@@ -12,11 +15,11 @@ class speechTranslation:
             if(microphone_name == self.__MIC_NAME):
                 self.__device_id = i
                 break
-        
+
     def translateSpeech(self):
         # obtain audio from the microphone
         r = sr.Recognizer()
-        with sr.Microphone(device_index = self.__device_id) as source:
+        with sr.Microphone(device_index=self.__device_id) as source:
             # clear console of errors
             subprocess.run("clear")
 
@@ -26,7 +29,7 @@ class speechTranslation:
 
             print("Start Speaking")
             try:
-                audio = r.listen(source, timeout = 1.5)
+                audio = r.listen(source, timeout=1.5)
             except sr.WaitTimeoutError:
                 print("Listening timed out whilst waiting for phrase to start")
                 return False
@@ -40,5 +43,3 @@ class speechTranslation:
         except sr.RequestError as e:
             print("Could not request results from Google Speech Recognition service; {0}".format(e))
             return False
-
-

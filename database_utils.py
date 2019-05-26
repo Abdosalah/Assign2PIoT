@@ -2,14 +2,15 @@
 import MySQLdb
 from datetime import datetime
 
+
 class DatabaseUtils:
     HOST = "35.244.118.23"
     USER = "root"
     PASSWORD = "abdosalah"
     DATABASE = "test_db"
 
-    def __init__(self, connection = None):
-        if(connection == None):
+    def __init__(self, connection=None):
+        if(connection is None):
             connection = MySQLdb.connect(DatabaseUtils.HOST, DatabaseUtils.USER,
                 DatabaseUtils.PASSWORD, DatabaseUtils.DATABASE)
         self.connection = connection
@@ -71,7 +72,7 @@ class DatabaseUtils:
                 (userId, bookId, borrowedDate, returnDate, 'borrowed',))
             self.connection.commit()
 
-    #Returns True if the book is Borrowed and False otherwise
+    # Returns True if the book is Borrowed and False otherwise
     def isBookBorrowed(self, username, bookId):
         userId = self.getUserId(username)
         with self.connection.cursor() as cursor:
@@ -84,7 +85,7 @@ class DatabaseUtils:
                         return True
             return False
 
-    #Changes the status of the Book to returned
+    # Changes the status of the Book to returned
     def returnBook(self, username, bookId):
         userId = self.getUserId(username)
         with self.connection.cursor() as cursor:
@@ -100,57 +101,3 @@ class DatabaseUtils:
                 "select LmsUserID from LmsUser where UserName = %s", (username,))
             for row in cursor.fetchall():
                 return(row[0])
-
-
-    # def deletePerson(self, personID):
-    #     with self.connection.cursor() as cursor:
-    #         # Note there is an intentionally placed bug here: != should be =
-    #         cursor.execute("delete from Person where PersonID = %s", (personID,))
-    #     self.connection.commit()
-            
-
-
-# myDb = DatabaseUtils()
-
-# print(myDb.getUserId('Abdo'))
-
-
-# print(myDb.getBorrowedBooks(2))
-
-# print(myDb.isBookBorrowed(3,5))
-
-# myDb.returnBook(2, 3)
-
-# print(myDb.isBookBorrowed(3))
-
-# myDb.insertUser('Abdo', 'Abdulrhman')
-# myDb.insertUser('Mahtab', 'Rezaei')
-# myDb.insertUser('Wtv1234', 'whatever')
-# myDb.insertUser('abdo2', 'ABDO2')
-# myDb.insertUser('abdo3', 'ABDO3')
-# myDb.insertUser('abdo4', 'ABDO4')
-# myDb.insertUser('abdo5', 'ABDO5')
-# myDb.insertUser('abdo6', 'ABDO6')
-# myDb.insertUser('abdo7', 'ABDO7')
-# myDb.borrowBook('1', '20')
-# myDb.borrowBook('1', '3')
-# myDb.borrowBook('1', '5')
-
-
-
-
-# myDb.insertBook('The Shock Doctrine', 'Naomi Klein', '2007-02-18')
-# myDb.insertBook('The Prince', 'Niccoló Machiavelli', '1532-11-08')
-# myDb.insertBook('The Winds of Winter', 'GRRM', '2019-01-25')
-# myDb.insertBook('A Clash of Kings', 'GRRM', '1999-02-15')
-# myDb.insertBook('A Game of Thrones', 'GRRM', '1996-08-28')
-# myDb.insertBook('A Feast for Crows', 'GRRM', '2005-11-24')
-# myDb.insertBook('A Dance with Drangons', 'GRRM', '2011-07-20')
-# myDb.insertBook('Homage to Catalonia', 'George Orwell', '1938-04-25')
-# myDb.insertBook('Frankenstein', 'Mary Shelley', '1823-07-20')
-# myDb.insertBook('The Belonging Kind', 'William Gibson', '1981-07-20')
-# myDb.insertBook('The Gernsback Continuum', 'William Gibson', '1981-07-20')
-# myDb.insertBook('The War of the Worlds', 'H.G.Wells', '1898-07-20')
-# myDb.insertBook('The Lord of the Rings', 'J.R.R.Tolkien', '1954-07-29')
-# myDb.insertBook('1984', 'George Orwell', '1949-06-08')
-
