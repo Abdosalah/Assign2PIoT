@@ -1,5 +1,4 @@
-
-
+import socket, json, sys
 from dbLogic import LocalUser
 
 from datetime import datetime
@@ -16,7 +15,7 @@ class RPMenu:
     firstName_promt = "Please enter your first name\n"
     lastName_promt = "Please enter your last name\n"
     email_promt = "Please enter your email\n"
-    HOST = data["masterpi_ip"]
+    HOST = '10.132.5.156'
     PORT = 63000
     ADDRESS = (HOST, PORT)
 
@@ -27,12 +26,14 @@ class RPMenu:
             choice = input(self.display_menu)
 
             if (choice == '1'):
+                self.connectToMp('Abdo', 123)
                 username = input(self.username_promt)
                 password = input(self.password_promt)
 
                 if (self.db.loginUsingCredentials(username, password)):
                     #We would send a msg using socket to MP
                     print("--login success")
+                    self.connectToMp(username, 123)
                 else:
                     print('--Invalid Username and/or password')
 
@@ -70,9 +71,9 @@ class RPMenu:
             s.connect(self.ADDRESS)
             print("Connected.")
 
-            print("Logging in as {}".format(user))
+            print("Logging in as {}".format(username))
             #Sending information to the master pi
-            socket_utils.sendJson(s, user)
+            socket_utils.sendJson(s, username)
 
             print("Waiting for Master Pi...")
             #Loop to wait for the master pi to send logout = True

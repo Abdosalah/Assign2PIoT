@@ -42,9 +42,3 @@ class speechTranslation:
             return False
 
 
-mySpeech = speechTranslation()
-
-value = mySpeech.translateSpeech()
-
-if (not value):
-    print("false")

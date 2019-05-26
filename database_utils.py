@@ -49,7 +49,8 @@ class DatabaseUtils:
                 "select * from Book Where BookID = %s", (bookId,))
             return cursor.fetchall()
 
-    def getBorrowedBooks(self, userId):
+    def getBorrowedBooks(self, username):
+        userId = self.getUserId(username)
         with self.connection.cursor() as cursor:
             cursor.execute(
                 "select BookID from BookBorrowed Where LmsUserID = %s and Status = 'borrowed'", (userId,))
@@ -61,7 +62,8 @@ class DatabaseUtils:
                 "select * from Book Where Author = %s", (bookAuthor,))
             return cursor.fetchall()
 
-    def borrowBook(self, userId, bookId, returnDate):
+    def borrowBook(self, username, bookId, returnDate):
+        userId = self.getUserId(username)
         borrowedDate = datetime.now().strftime('%Y-%m-%d')
         with self.connection.cursor() as cursor:
             cursor.execute(
@@ -70,7 +72,8 @@ class DatabaseUtils:
             self.connection.commit()
 
     #Returns True if the book is Borrowed and False otherwise
-    def isBookBorrowed(self, userId, bookId):
+    def isBookBorrowed(self, username, bookId):
+        userId = self.getUserId(username)
         with self.connection.cursor() as cursor:
             cursor.execute(
                 "select Status from BookBorrowed Where BookID= %s and LmsUserID = %s ", (bookId, userId, )
@@ -82,13 +85,21 @@ class DatabaseUtils:
             return False
 
     #Changes the status of the Book to returned
-    def returnBook(self, userId, bookId):
+    def returnBook(self, username, bookId):
+        userId = self.getUserId(username)
         with self.connection.cursor() as cursor:
             cursor.execute(
                 "update BookBorrowed set Status = 'returned' Where BookID= %s and LmsUserID = %s and Status = 'borrowed'", (
                     bookId, userId, )
             )
             self.connection.commit()
+
+    def getUserId(self, username):
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                "select LmsUserID from LmsUser where UserName = %s", (username,))
+            for row in cursor.fetchall():
+                return(row[0])
 
 
     # def deletePerson(self, personID):
@@ -101,6 +112,9 @@ class DatabaseUtils:
 
 # myDb = DatabaseUtils()
 
+# print(myDb.getUserId('Abdo'))
+
+
 # print(myDb.getBorrowedBooks(2))
 
 # print(myDb.isBookBorrowed(3,5))
@@ -109,9 +123,9 @@ class DatabaseUtils:
 
 # print(myDb.isBookBorrowed(3))
 
-# myDb.insertUser('Mahtab95', 'Mahtab')
-# myDb.insertUser('Irfan123', 'Irfan')
-# myDb.insertUser('abdo1', 'ABDO1')
+# myDb.insertUser('Abdo', 'Abdulrhman')
+# myDb.insertUser('Mahtab', 'Rezaei')
+# myDb.insertUser('Wtv1234', 'whatever')
 # myDb.insertUser('abdo2', 'ABDO2')
 # myDb.insertUser('abdo3', 'ABDO3')
 # myDb.insertUser('abdo4', 'ABDO4')
