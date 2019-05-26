@@ -1,9 +1,3 @@
-# USAGE
-# With default parameters
-#     python3 03_recognise.py
-# OR specifying the encodings, screen resolution
-#     python3 03_recognise.py -e encodings.pickle -r 240
-
 ## Acknowledgement
 ## This code is adapted from:
 ## https://www.pyimagesearch.com/2018/06/18/face-recognition-with-opencv-python-and-deep-learning/
@@ -36,7 +30,7 @@ class facialRecognition:
         self.__args = vars(self.__ap.parse_args())
 
         # load the known faces and embeddings
-        print("[INFO] loading encodings...")
+        # print("[INFO] loading encodings...")
         self.__data = pickle.loads(open(self.__args["encodings"], "rb").read())
 
     def startRecognizing(self):
@@ -92,14 +86,15 @@ class facialRecognition:
 
                 # update the list of names
                 names.append(name)
+            if (not names):
+                return False
 
         # loop over the recognized faces
             for name in names:
                 # print to console, identified person
-                if (name is not "Unknown"):
-                    return name
-                # Set a flag to sleep the cam for fixed time
-                time.sleep(3.0)
+                # if (name is not "Unknown"):
+                #     return name
+                return name
 
         # do a bit of cleanup
         vs.stop()

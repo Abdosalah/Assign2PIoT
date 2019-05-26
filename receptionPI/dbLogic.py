@@ -6,13 +6,14 @@ import binascii
 import os
 from recognise import facialRecognition
 
-class DbUser:
+class LocalUser:
     __userName = NotImplemented
     __password = NotImplemented
     __firstName = NotImplemented
     __lastName = NotImplemented
     __email = NotImplemented
     __db = NotImplemented
+    __myFacialRecognition = None
 
     def __init__(self, dbName):
         
@@ -25,31 +26,31 @@ class DbUser:
         if ( self.isLengthValid(userName, 4) and not self.isUsernameUsed(userName)):
             self.__userName = userName
         else:
-            print("Invalid Username")
+            print("--Invalid Username")
             return False
         
         if (self.isLengthValid(password, 5)):
             self.__password = self.hash_password(password)
         else:
-            print("Invalid Length of Password")
+            print("--Invalid Length of Password")
             return False
         
         if (self.isLengthValid(firstName, 3)):
             self.__firstName = firstName
         else:
-            print("Invalid Length of Firstname")
+            print("--Invalid Length of Firstname")
             return False
         
         if (self.isLengthValid(lastName, 3)):
             self.__lastName = lastName
         else:
-            print("Invalid Length of Lastname")
+            print("--Invalid Length of Lastname")
             return False
 
         if ( self.isEmailValid(email) ):
             self.__email = email
         else:
-            print("Invalid Email")
+            print("--Invalid Email")
             return False
 
         record = (self.__userName, self.__password, self.__firstName, self.__lastName, self.__email)
@@ -69,15 +70,17 @@ class DbUser:
                            (userName,))
 
         for row in data:
-            print(row[0])
             if (self.verify_password(row[1], password)):
                 return True
 
         return False
 
     def loginUsingFR(self):
-        myFacialRecognition = facialRecognition()
-        userName = myFacialRecognition.startRecognizing()
+        self.__myFacialRecognition = facialRecognition()
+        userName = self.__myFacialRecognition.startRecognizing()
+
+        if( userName is False):
+            return False
 
         cur = self.__db.cursor()
         data = cur.execute("SELECT userName, password FROM library_data WHERE userName = ?",
@@ -133,7 +136,7 @@ class DbUser:
 
 
 
-myDb = DbUser('UsersRP.db')
+# myDb = DbUser('UsersRP.db')
 
 # print(myDb.loginUsingFR())
 
@@ -141,7 +144,7 @@ myDb = DbUser('UsersRP.db')
 
 # myDb.registerUser('Abdo', '12345678', 'Abdo', 'Salah', 'wtv1@gmail.com')
 # myDb.registerUser('Mahtab', '87654321', 'Abdo', 'Salah', 'wtv2@gmail.com')
-myDb.registerUser('Wtv1234', '1234567890', 'Abdo', 'Salah', 'wtv3@gmail.com')
+# myDb.registerUser('Wtv1234', '1234567890', 'Abdo', 'Salah', 'wtv3@gmail.com')
 
 # hashedPass = myDb.hash_password('mypassword')
 
